@@ -1,0 +1,12 @@
+{
+  "name": "Syllabus Flow",
+  "short_name": "Syllabus Flow",
+  "description": "Plan and complete your syllabuses offline.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#10121b",
+  "theme_color": "#10121b",
+  "icons": [
+    { "src": "app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

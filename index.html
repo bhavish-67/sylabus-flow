@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11131b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Syllabus Flow">
+  <title>Syllabus Flow</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="app-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">YOUR LEARNING SPACE</p>
+        <h1>Syllabus <em>Flow</em></h1>
+      </div>
+      <div class="header-actions"><button class="install-button" id="installApp" hidden>Install</button><button class="icon-button" id="themeToggle" aria-label="Toggle color theme"><span aria-hidden="true">☼</span></button></div>
+    </header>
+
+    <section class="hero glass">
+      <div class="progress-ring" id="progressRing" aria-label="Overall completion"><span id="overallProgress">0%</span></div>
+      <div>
+        <p class="eyebrow">OVERALL PROGRESS</p>
+        <h2 id="progressHeadline">Ready when you are.</h2>
+        <p id="progressCopy">Add your first syllabus to begin.</p>
+      </div>
+    </section>
+
+    <p class="offline-note"><span>●</span> Offline library included · Your plans stay on this phone</p>
+
+    <section class="toolbar" aria-label="Syllabus actions">
+      <button class="primary-button" id="addSyllabus">+ Add syllabus</button>
+      <button class="search-button" id="openSearch">⌕ &nbsp; Browse offline library</button>
+    </section>
+
+    <section class="syllabus-area" aria-label="Your syllabuses">
+      <div class="section-heading"><h2>My syllabuses</h2><span id="syllabusCount">0 items</span></div>
+      <div id="syllabusList" class="syllabus-list"></div>
+      <div id="emptyState" class="empty-state glass">
+        <div class="empty-number">01</div>
+        <h3>Your plan starts here</h3>
+        <p>Add a course, then break it into units and tick them off as you go.</p>
+        <button class="text-button" id="emptyAdd">Create your first syllabus →</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="active" aria-current="page">⌂<span>Planner</span></button>
+    <button id="navSearch">⌕<span>Library</span></button>
+    <button id="navAdd" class="nav-add" aria-label="Add syllabus">+</button>
+    <button id="navTheme">◐<span>Theme</span></button>
+  </nav>
+
+  <dialog id="syllabusDialog" class="modal">
+    <form method="dialog" id="syllabusForm">
+      <div class="modal-title"><div><p class="eyebrow" id="formKicker">NEW SYLLABUS</p><h2 id="formTitle">Build your plan</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+      <label>Course or syllabus name<input id="courseName" name="courseName" required maxlength="60" placeholder="e.g. Biology 101"></label>
+      <label>Short description <input id="courseSubtitle" name="courseSubtitle" maxlength="80" placeholder="e.g. Semester 1 · 12 weeks"></label>
+      <label>Units — one per line<textarea id="courseUnits" name="courseUnits" rows="6" placeholder="Cell structure&#10;Genetics&#10;Ecology"></textarea></label>
+      <button class="primary-button full" value="default" id="saveSyllabus">Save syllabus</button>
+    </form>
+  </dialog>
+
+  <dialog id="searchDialog" class="modal search-modal">
+    <form method="dialog" id="searchForm">
+      <div class="modal-title"><div><p class="eyebrow">OFFLINE SYLLABUS LIBRARY</p><h2>Choose a plan</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+      <div class="library-tabs" role="tablist" aria-label="Syllabus source"><button type="button" class="library-tab active" id="offlineTab" role="tab" aria-selected="true">Offline library</button><button type="button" class="library-tab" id="onlineTab" role="tab" aria-selected="false">Web search</button></div>
+      <section id="offlinePanel" role="tabpanel">
+        <p class="form-intro">Every plan here comes with the app. Filter by a subject or level, then tap to add it.</p>
+        <label>Find a subject or level<input id="searchQuery" autocomplete="off" placeholder="e.g. Class 12, English, coding"></label>
+        <div id="templateResults" class="template-results" aria-live="polite"></div>
+      </section>
+      <section id="onlinePanel" role="tabpanel" hidden>
+        <p class="form-intro">Search the web with Tavily, then download a result into this app. Downloads stay available offline.</p>
+        <label>Search any syllabus<input id="webSearchQuery" autocomplete="off" maxlength="180" placeholder="e.g. CBSE Class 12 Physics syllabus 2026"></label>
+        <button type="button" id="webSearchButton" class="primary-button full">Search online</button>
+        <p class="search-status" id="webSearchStatus" aria-live="polite"></p>
+        <div id="webSearchResults" class="template-results" aria-live="polite"></div>
+      </section>
+    </form>
+  </dialog>
+
+  <dialog id="readerDialog" class="modal reader-modal">
+    <form method="dialog">
+      <div class="modal-title"><div><p class="eyebrow">SAVED FOR OFFLINE</p><h2 id="readerTitle">Syllabus</h2></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+      <p class="reader-meta" id="readerMeta"></p>
+      <article id="readerContent" class="reader-content"></article>
+    </form>
+  </dialog>
+
+  <template id="syllabusTemplate">
+    <article class="syllabus-card glass">
+      <div class="card-top"><div class="course-index">01</div><div class="card-actions"><button class="rename-card" aria-label="Edit syllabus">Edit</button><button class="delete-card" aria-label="Delete syllabus">×</button></div></div>
+      <div class="course-heading"><h3></h3><p></p></div>
+      <div class="course-progress"><div class="track"><i></i></div><strong>0%</strong></div>
+      <div class="unit-list"></div>
+      <button class="read-source" hidden>Read saved syllabus</button>
+      <button class="add-unit">+ Add unit</button>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
